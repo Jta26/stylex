@@ -37,10 +37,6 @@ export default function TypingWord() {
           <span {...stylex.props(styles.hidden)}>{punctuation(index)}</span>
         </span>
       ))}
-      {/* The grid track and the container border interpolate on different
-          curves, so a caret painted on the container drifts off the glyphs.
-          This layer is pinned to the container's padding box, which is where
-          the border sits, and clips the visible word to that same edge. */}
       <span {...stylex.props(styles.reveal)}>
         {WORDS.map((word, index) => (
           <span key={word} {...stylex.props(styles.word)}>
@@ -122,11 +118,9 @@ const styles = stylex.create({
     animationDelay: `${TIME / 2}s`,
     animationIterationCount: 'infinite',
   },
-  // In-flow copy that gives the grid its intrinsic size. Not painted.
   sizer: {
     visibility: 'hidden',
   },
-  // Fills the container padding box rather than the narrower animated track.
   reveal: {
     position: 'absolute',
     inset: 0,
