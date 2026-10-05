@@ -59,19 +59,30 @@ export class BorderRadiusShorthand {
     horizontalTopRight: LengthPercentage = horizontalTopLeft,
     horizontalBottomRight: LengthPercentage = horizontalTopLeft,
     horizontalBottomLeft: LengthPercentage = horizontalTopRight,
-    verticalTopLeft: LengthPercentage = horizontalTopLeft,
-    verticalTopRight: LengthPercentage = verticalTopLeft,
-    verticalBottomRight: LengthPercentage = verticalTopLeft,
-    verticalBottomLeft: LengthPercentage = verticalTopRight,
+    verticalTopLeft?: LengthPercentage,
+    verticalTopRight?: LengthPercentage,
+    verticalBottomRight?: LengthPercentage,
+    verticalBottomLeft?: LengthPercentage,
   ) {
     this.horizontalTopLeft = horizontalTopLeft;
     this.horizontalTopRight = horizontalTopRight;
     this.horizontalBottomRight = horizontalBottomRight;
     this.horizontalBottomLeft = horizontalBottomLeft;
-    this.verticalTopLeft = verticalTopLeft;
-    this.verticalTopRight = verticalTopRight;
-    this.verticalBottomRight = verticalBottomRight;
-    this.verticalBottomLeft = verticalBottomLeft;
+    // No slash means the vertical corners match the horizontal ones. A slash
+    // still expands like the horizontal shorthand: missing corners copy the
+    // earlier vertical values, not the horizontal ones.
+    if (verticalTopLeft === undefined) {
+      this.verticalTopLeft = horizontalTopLeft;
+      this.verticalTopRight = horizontalTopRight;
+      this.verticalBottomRight = horizontalBottomRight;
+      this.verticalBottomLeft = horizontalBottomLeft;
+    } else {
+      this.verticalTopLeft = verticalTopLeft;
+      this.verticalTopRight = verticalTopRight ?? verticalTopLeft;
+      this.verticalBottomRight = verticalBottomRight ?? verticalTopLeft;
+      this.verticalBottomLeft =
+        verticalBottomLeft ?? verticalTopRight ?? verticalTopLeft;
+    }
   }
 
   // The shortest possible version of the border-radius
