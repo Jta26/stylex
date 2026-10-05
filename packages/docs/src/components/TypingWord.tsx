@@ -102,8 +102,8 @@ const hidden = stylex.keyframes({
 const TIME = 8;
 const styles = stylex.create({
   container: {
-    display: 'inline-grid',
     position: 'relative',
+    display: 'inline-grid',
     gridTemplateColumns: '1fr',
     overflow: 'hidden',
     fontWeight: 600,
