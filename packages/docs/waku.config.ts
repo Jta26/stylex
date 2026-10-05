@@ -69,13 +69,10 @@ export default defineConfig({
       ],
     },
     ssr: {
-      // Force these CJS modules to be bundled during SSR so they work properly.
-      // use-query-params has a React peer, so @vitejs/plugin-rsc already adds it
-      // to the SSR optimizeDeps exclude list. Including it as well makes esbuild
-      // reject the entry point and the dev server exits on startup.
+      // Force these CJS modules to be bundled during SSR so they work properly
       noExternal: ['use-query-params', 'serialize-query-params'],
       optimizeDeps: {
-        include: ['serialize-query-params'],
+        include: ['use-query-params', 'serialize-query-params'],
       },
     },
     define: {
