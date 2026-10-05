@@ -9,7 +9,6 @@
 
 import { vars } from '@/theming/vars.stylex';
 import * as stylex from '@stylexjs/stylex';
-import { Fragment } from 'react';
 
 const WORDS = [
   'expressive',
@@ -19,23 +18,37 @@ const WORDS = [
   'themeable',
 ];
 
+function punctuation(index: number): string {
+  if (index < WORDS.length - 2) {
+    return ', ';
+  }
+  if (index === WORDS.length - 2) {
+    return ' and ';
+  }
+  return '';
+}
+
 export default function TypingWord() {
   return (
     <span {...stylex.props(styles.container)} aria-hidden="true">
       {WORDS.map((word, index) => (
-        <Fragment key={word}>
-          <span {...stylex.props(styles.word)}>
-            {word}
-            <span {...stylex.props(styles.hidden)}>
-              {index < WORDS.length - 2
-                ? ', '
-                : index === WORDS.length - 2
-                  ? ' and '
-                  : ''}
-            </span>
-          </span>
-        </Fragment>
+        <span key={word} {...stylex.props(styles.word, styles.sizer)}>
+          {word}
+          <span {...stylex.props(styles.hidden)}>{punctuation(index)}</span>
+        </span>
       ))}
+      {/* The grid track and the container border interpolate on different
+          curves, so a caret painted on the container drifts off the glyphs.
+          This layer is pinned to the container's padding box, which is where
+          the border sits, and clips the visible word to that same edge. */}
+      <span {...stylex.props(styles.reveal)}>
+        {WORDS.map((word, index) => (
+          <span key={word} {...stylex.props(styles.word)}>
+            {word}
+            <span {...stylex.props(styles.hidden)}>{punctuation(index)}</span>
+          </span>
+        ))}
+      </span>
     </span>
   );
 }
@@ -94,6 +107,7 @@ const TIME = 8;
 const styles = stylex.create({
   container: {
     display: 'inline-grid',
+    position: 'relative',
     gridTemplateColumns: '1fr',
     overflow: 'hidden',
     fontWeight: 600,
@@ -107,6 +121,18 @@ const styles = stylex.create({
     animationTimingFunction: 'ease-out',
     animationDelay: `${TIME / 2}s`,
     animationIterationCount: 'infinite',
+  },
+  // In-flow copy that gives the grid its intrinsic size. Not painted.
+  sizer: {
+    visibility: 'hidden',
+  },
+  // Fills the container padding box rather than the narrower animated track.
+  reveal: {
+    position: 'absolute',
+    inset: 0,
+    display: 'grid',
+    gridTemplateColumns: '1fr',
+    overflow: 'hidden',
   },
   word: {
     gridArea: '1 / 1',
